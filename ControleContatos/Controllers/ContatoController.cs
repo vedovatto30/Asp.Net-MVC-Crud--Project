@@ -1,8 +1,8 @@
 ﻿using ControleContatos.Models;
-using ControleContatos.Repositorio;
+using ControleDeContatos.Repositorio;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ControleContatos.Controllers
+namespace ControleDeContatos.Controllers
 {
     public class ContatoController : Controller
     {
@@ -14,28 +14,87 @@ namespace ControleContatos.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            List<ContatoModel> contatos = _contatoRepositorio.BuscarTodos();
+            return View(contatos);
         }
 
-        public IActionResult Criar() //sera criado as actions das paginas dos botoes
+
+        public IActionResult Editar(int id)
         {
-            return View();
-        }
-        public IActionResult Editar()
-        {
-            return View();
+            ContatoModel contato = _contatoRepositorio.BuscarPorId(id);
+            return View(contato);
         }
 
-        public IActionResult ApagarConfirmacao()
+        public IActionResult ApagarConfirmacao(int id)
         {
-            return View();
+
+            ContatoModel contato = _contatoRepositorio.BuscarPorId(id);
+            return View(contato);
+        }
+
+        public IActionResult Apagar(int id)
+        {
+            try
+            {
+                bool apagado = _contatoRepositorio.Apagar(id);
+                if (apagado)
+                {
+                    TempData["MenagemSucesso"] = "Contato apagado com sucesso ";
+                }
+                else
+                {
+                    TempData["MenagemErro"] = "Ops, não conseguimos apagar seu contato ";
+                }
+                return RedirectToAction("Index");
+            }
+            catch (System.Exception erro)
+            {
+                TempData["MenagemErro"] = "Ops, não conseguimos apagar";
+                return RedirectToAction("Index");
+            }
+
+        }
+
+
+        [HttpPost]
+        public IActionResult Criar(ContatoModel contato) //sera criado as actions das paginas dos botoes
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _contatoRepositorio.Adicionar(contato);
+                    TempData["MenagemSucesso"] = "Contato cadastrado com sucesso ";
+                    return RedirectToAction("Index");
+                }
+
+                return View(contato);
+            }
+            catch (System.Exception erro)
+            {
+                TempData["MenagemErro"] = "Ops, não conseguimos cadastrar";
+                return RedirectToAction("Index");
+            }
         }
 
         [HttpPost]
-        public IActionResult Criar(ContatoModel contato)
+        public IActionResult Alterar(ContatoModel contato)
         {
-            _contatoRepositorio.Adicionar(contato);
-            return RedirectToAction("Index");
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _contatoRepositorio.Atualizar(contato);
+                    TempData["MenagemSucesso"] = "Contato alterado com sucesso";
+                    return RedirectToAction("Index");
+                }
+                return View("Editar", contato);
+            }
+            catch (System.Exception erro)
+            {
+                TempData["MenagemErro"] = "Ops, não conseguimos atualizar seu contato";
+                return RedirectToAction("Index");
+            }
         }
     }
 }

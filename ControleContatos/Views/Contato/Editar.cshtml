@@ -1,5 +1,6 @@
-﻿@{
-    ViewData["Title"] = "Editar contatos";
+﻿@model ContatoModel;
+@{
+    ViewData["Title"] = "Editar contato";
 }
 
 <div class="text-center">
@@ -10,20 +11,26 @@
 
     
 </div>
-<form>
+<form asp-controller="Contato" asp-action="Alterar" method="post">
+
+    <input type="hidden" asp-for="Id" />
+
     <div class="form-group">
         <label for="nome">Nome</label>
-        <input type="text" class="form-control"   placeholder="Digite seu nome">
+        <input type="text" asp-for="Nome" class="form-control"   placeholder="Digite seu nome">
+         @Html.ValidationMessageFor(x => x.Nome);
     </div>
     
     <div class="form-group">
         <label for="email">E-mail</label>
-        <input type="text" class="form-control"   placeholder="Digite seu e-mail">
+        <input type="text" asp-for="Email" class="form-control"   placeholder="Digite seu e-mail">
+         @Html.ValidationMessageFor(x => x.Email);
     </div>
     
     <div class="form-group">
         <label for="phone">Celular</label>
-        <input type="text" class="form-control"   placeholder="Digite seu celular">
+        <input type="text" asp-for="Celular" class="form-control"   placeholder="Digite seu celular">
+         @Html.ValidationMessageFor(x => x.Celular);
     </div>
 
     

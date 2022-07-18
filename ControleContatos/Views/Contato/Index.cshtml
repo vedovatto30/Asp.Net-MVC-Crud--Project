@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<ContatoModel>
+@{
     ViewData["Title"] = "Listagem de contatos";
 }
 
@@ -8,6 +9,24 @@
         <a class="btn btn-primary" role="button" asp-controller="Contato" asp-action="Criar" >Adicionar novo contato</a>   
 
     </div>
+    <br/>
+    @if (TempData["MessagemSucesso"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+        <button type="button" class="btn btn-danger btn-primarysmall close-alert" arial-label="Close">X</button>
+         @TempData["MessagemSucesso"]
+        </div>
+    }
+
+    @if (TempData["MessagemErro"] != null)
+    {
+        <div class="alert alert-warning" role="alert">
+            <button type="button" class="btn btn-danger btn-primarysmall close-alert" arial-label="Close">X</button>
+            @TempData["MessagemErro"]
+        </div>
+
+    }
+
     <br/>
     <h1 class="display-4">Listagem de contatos</h1>
 
@@ -22,46 +41,28 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>mark@example.com</td>
-            <td>55 5555 5577</td>
-            <td>
-                <div class="btn-group" role="group">
-                    <a role="button" class="btn btn-outline-secondary" asp-controller="Contato" asp-action="Editar">Editar</a>
+            @if (Model != null && Model.Any())
+            {
+                foreach (ContatoModel contato in Model)
+                {
+                    <tr>
+                        <th scope="row">@contato.Id</th>
+                        <td>@contato.Nome</td>
+                        <td>@contato.Email</td>
+                        <td>@contato.Celular</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a role="button" class="btn btn-outline-secondary" asp-route-id="@contato.Id" asp-controller="Contato" asp-action="Editar">Editar</a>
                     
-                    <a role="button" class="btn btn-outline-danger"  asp-controller="Contato" asp-action="ApagarConfirmacao">Apagar</a>
+                                <a role="button" class="btn btn-outline-danger" asp-route-id="@contato.Id"   asp-controller="Contato" asp-action="ApagarConfirmacao">Apagar</a>
 
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>João</td>
-            <td>joao@example.com.uk</td>
-            <td>50 5588 5577</td>
-            <td>
-                <div class="btn-group" role="group">
-                    <a role="button" class="btn btn-outline-secondary" asp-controller="Contato" asp-action="Editar">Editar</a>
-                    <a role="button" class="btn btn-outline-danger"  asp-controller="Contato" asp-action="ApagarConfirmacao">Apagar</a>
-
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>July</td>
-            <td>july@exemple.com.br</td>
-            <td>54 9955 5544</td>
-            <td>
-                <div class="btn-group" role="group">
-                    <a role="button" class="btn btn-outline-secondary" asp-controller="Contato" asp-action="Editar">Editar</a>
-                    <a role="button" class="btn btn-outline-danger" asp-controller="Contato" asp-action="ApagarConfirmacao">Apagar</a>
-
-                </div>
-            </td>
-        </tr>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                }
+            }
+       
 
         </tbody>
     </table>

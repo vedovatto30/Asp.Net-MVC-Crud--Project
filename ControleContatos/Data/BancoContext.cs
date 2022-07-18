@@ -5,10 +5,7 @@ namespace ControleContatos.Data
 {
     public class BancoContext : DbContext
     {
-        public BancoContext()
-        {
-
-        }
+        
         public BancoContext(DbContextOptions<BancoContext> options) : base(options)
         {
 
