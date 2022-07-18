@@ -2,12 +2,10 @@
 using ControleDeContatos.Repositorio;
 using Microsoft.EntityFrameworkCore;
 
-namespace ControleIContatos;
+namespace ControleDeContatos;
 
 public class Startup
 {
-
-
     public Startup(IConfiguration configuration)
     {
         Configuration = configuration;
@@ -20,7 +18,18 @@ public class Startup
         services.AddControllersWithViews();
         services.AddEntityFrameworkSqlServer().AddDbContext<BancoContext>(o => o.
             UseSqlServer(Configuration.GetConnectionString("Database")));
+
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+        services.AddScoped<IContatoRepositorio, ContatoRepositorio>();
+
+        services.AddSession(o =>
+        {
+            o.Cookie.HttpOnly = true;
+            o.Cookie.IsEssential = true;
+        });
     }
+
 
     // This method gets called by the runtime. Use this method to add services to the container.
 
@@ -49,8 +58,8 @@ public class Startup
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
         });
     }
 }

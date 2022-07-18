@@ -1,5 +1,6 @@
 using ControleContatos;
-using ControleIContatos;
+
+using ControleDeContatos;
 
 public class Program
 {
